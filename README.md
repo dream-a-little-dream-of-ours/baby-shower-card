@@ -1,2 +1,2 @@
-# baby-card-danah
-baby shower card for Danah
+# baby-shower-card
+baby shower card for a teammate
