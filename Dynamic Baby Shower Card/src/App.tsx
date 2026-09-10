@@ -77,6 +77,33 @@ export default function App() {
         overflowX: 'hidden',
       }}
     >
+      {/* Responsive signature grid */}
+      <style>{`
+        .signatures-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        @media (min-width: 768px) {
+          .signatures-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .signatures-grid {
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 480px) {
+          .signatures-grid {
+            gap: 12px;
+          }
+        }
+      `}</style>
+
       {/* ── Hero card ── */}
       <div
         style={{
@@ -122,6 +149,7 @@ export default function App() {
           maxWidth: 1200,
           margin: '0 auto',
           padding: '40px 24px 0',
+          boxSizing: 'border-box',
         }}
       >
         <p
@@ -165,13 +193,7 @@ export default function App() {
             Be the first to sign the card 🌿
           </p>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
-              gap: 16,
-            }}
-          >
+          <div className="signatures-grid">
             {signatures.map((sig, i) => (
               <SignatureCard key={sig.id} sig={sig} index={i} />
             ))}
@@ -300,6 +322,7 @@ export default function App() {
               borderRadius: '20px 20px 0 0',
               padding: '32px 28px 40px',
               boxShadow: '0 -8px 40px rgba(45,31,26,0.12)',
+              boxSizing: 'border-box',
             }}
           >
             {submitted ? (
@@ -453,6 +476,8 @@ function SignatureCard({
         transform: `rotate(${rotate}deg)`,
         transition: 'transform 0.2s',
         cursor: 'default',
+        minWidth: 0,
+        boxSizing: 'border-box',
       }}
       onMouseEnter={e =>
         ((e.currentTarget as HTMLDivElement).style.transform =
@@ -471,6 +496,7 @@ function SignatureCard({
           color: 'var(--color-ink)',
           margin: '0 0 14px',
           opacity: 0.8,
+          overflowWrap: 'anywhere',
         }}
       >
         {sig.message}
@@ -483,6 +509,7 @@ function SignatureCard({
           fontSize: 15,
           color: '#8c2d1d',
           margin: 0,
+          overflowWrap: 'anywhere',
         }}
       >
         — {sig.name}
