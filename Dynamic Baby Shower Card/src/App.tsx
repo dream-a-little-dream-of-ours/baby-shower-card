@@ -364,7 +364,7 @@ export default function App() {
                     margin: '0 0 28px',
                   }}
                 >
-                  Your note will appear on the card.
+                  Your message will appear on the card.
                 </p>
 
                 <label style={labelStyle}>Your name</label>
