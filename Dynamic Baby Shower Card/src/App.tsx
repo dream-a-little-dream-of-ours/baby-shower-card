@@ -1,28 +1,65 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import FloralIllustration from './FloralIllustration'
+import { supabase } from './supabase'
 
 interface Signature {
-  id: number
+  id: string
   name: string
   message: string
+  created_at: string
 }
 
-const INITIAL_SIGNATURES: Signature[] = []
-
 export default function App() {
-  const [signatures, setSignatures] = useState<Signature[]>(INITIAL_SIGNATURES)
+  const [signatures, setSignatures] = useState<Signature[]>([])
   const [showModal, setShowModal] = useState(false)
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  function handleSign() {
+  useEffect(() => {
+    loadSignatures()
+  }, [])
+
+  async function loadSignatures() {
+    const { data, error } = await supabase
+      .from('signatures')
+      .select('id, name, message, created_at')
+      .order('created_at', { ascending: true })
+
+    if (error) {
+      console.error('Error loading signatures:', error)
+    } else {
+      setSignatures(data || [])
+    }
+
+    setLoading(false)
+  }
+
+  async function handleSign() {
     if (!name.trim() || !message.trim()) return
-    setSignatures(prev => [
-      ...prev,
-      { id: Date.now(), name: name.trim(), message: message.trim() },
-    ])
+
+    const { data, error } = await supabase
+      .from('signatures')
+      .insert({
+        name: name.trim(),
+        message: message.trim(),
+      })
+      .select('id, name, message, created_at')
+      .single()
+
+    if (error) {
+      console.error('Error saving signature:', error)
+      alert('Something went wrong saving your message. Please try again.')
+      return
+    }
+
+    if (data) {
+      setSignatures(prev => [...prev, data])
+    }
+
     setSubmitted(true)
+
     setTimeout(() => {
       setShowModal(false)
       setName('')
@@ -49,7 +86,14 @@ export default function App() {
         }}
       >
         <div style={{ textAlign: 'center', padding: '0 12px' }}>
-          <div style={{ position: 'relative', display: 'inline-block', width: '100%', maxWidth: 460 }}>
+          <div
+            style={{
+              position: 'relative',
+              display: 'inline-block',
+              width: '100%',
+              maxWidth: 460,
+            }}
+          >
             <FloralIllustration />
           </div>
         </div>
@@ -66,7 +110,8 @@ export default function App() {
         <div
           style={{
             height: 1,
-            background: 'linear-gradient(to right, transparent, #3d6b22, transparent)',
+            background:
+              'linear-gradient(to right, transparent, #3d6b22, transparent)',
           }}
         />
       </div>
@@ -94,17 +139,45 @@ export default function App() {
           Messages from the team
         </p>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: 16,
-          }}
-        >
-          {signatures.map((sig, i) => (
-            <SignatureCard key={sig.id} sig={sig} index={i} />
-          ))}
-        </div>
+        {loading ? (
+          <p
+            style={{
+              textAlign: 'center',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 13,
+              color: '#4a5e42',
+              opacity: 0.6,
+            }}
+          >
+            Loading messages…
+          </p>
+        ) : signatures.length === 0 ? (
+          <p
+            style={{
+              textAlign: 'center',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 13,
+              color: '#4a5e42',
+              opacity: 0.6,
+              margin: '0 0 8px',
+            }}
+          >
+            Be the first to leave a message 🌿
+          </p>
+        ) : (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                'repeat(auto-fill, minmax(220px, 1fr))',
+              gap: 16,
+            }}
+          >
+            {signatures.map((sig, i) => (
+              <SignatureCard key={sig.id} sig={sig} index={i} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Sign CTA ── */}
@@ -134,11 +207,13 @@ export default function App() {
           }}
           onMouseEnter={e => {
             ;(e.currentTarget as HTMLButtonElement).style.opacity = '0.88'
-            ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)'
+            ;(e.currentTarget as HTMLButtonElement).style.transform =
+              'translateY(-1px)'
           }}
           onMouseLeave={e => {
             ;(e.currentTarget as HTMLButtonElement).style.opacity = '1'
-            ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'
+            ;(e.currentTarget as HTMLButtonElement).style.transform =
+              'translateY(0)'
           }}
         >
           Sign the card 🌿
@@ -156,16 +231,25 @@ export default function App() {
             margin: 0,
           }}
         >
-          {signatures.length} {signatures.length === 1 ? 'person has' : 'people have'} signed this card.
+          {signatures.length}{' '}
+          {signatures.length === 1 ? 'person has' : 'people have'} signed this
+          card.
         </p>
       </div>
 
       {/* ── Footer divider ── */}
-      <div style={{ maxWidth: 560, margin: '48px auto 0', padding: '0 24px' }}>
+      <div
+        style={{
+          maxWidth: 560,
+          margin: '48px auto 0',
+          padding: '0 24px',
+        }}
+      >
         <div
           style={{
             height: 1,
-            background: 'linear-gradient(to right, transparent, #3d6b22, transparent)',
+            background:
+              'linear-gradient(to right, transparent, #3d6b22, transparent)',
           }}
         />
       </div>
@@ -222,6 +306,7 @@ export default function App() {
             {submitted ? (
               <div style={{ textAlign: 'center', padding: '20px 0' }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🌿</div>
+
                 <p
                   style={{
                     fontFamily: 'var(--font-serif)',
@@ -232,6 +317,7 @@ export default function App() {
                 >
                   Message added!
                 </p>
+
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
