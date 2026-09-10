@@ -162,7 +162,7 @@ export default function App() {
               margin: '0 0 8px',
             }}
           >
-            Be the first to leave a message 🌿
+            Be the first to sign the card 🌿
           </p>
         ) : (
           <div
@@ -352,7 +352,7 @@ export default function App() {
                     margin: '0 0 6px',
                   }}
                 >
-                  Leave a message
+                  Sign the card
                 </h2>
 
                 <p
@@ -418,7 +418,7 @@ export default function App() {
                     transition: 'background 0.2s',
                   }}
                 >
-                  Leave my message 🌿
+                  Sign the card 🌿
                 </button>
               </>
             )}
