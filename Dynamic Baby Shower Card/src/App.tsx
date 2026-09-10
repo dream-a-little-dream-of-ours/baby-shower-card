@@ -102,7 +102,7 @@ export default function App() {
       {/* ── Divider ── */}
       <div
         style={{
-          maxWidth: 560,
+          maxWidth: 1200,
           margin: '48px auto 0',
           padding: '0 24px',
         }}
@@ -119,7 +119,7 @@ export default function App() {
       {/* ── Signatures ── */}
       <div
         style={{
-          maxWidth: 560,
+          maxWidth: 1200,
           margin: '0 auto',
           padding: '40px 24px 0',
         }}
@@ -168,8 +168,7 @@ export default function App() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fill, minmax(220px, 1fr))',
+              gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
               gap: 16,
             }}
           >
@@ -240,7 +239,7 @@ export default function App() {
       {/* ── Footer divider ── */}
       <div
         style={{
-          maxWidth: 560,
+          maxWidth: 1200,
           margin: '48px auto 0',
           padding: '0 24px',
         }}
@@ -271,7 +270,7 @@ export default function App() {
             letterSpacing: '0.03em',
           }}
         >
-          Designed with ♥ by Your Team
+          Warm wishes from your team
         </p>
       </footer>
 
