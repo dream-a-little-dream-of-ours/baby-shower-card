@@ -77,11 +77,10 @@ export default function App() {
         overflowX: 'hidden',
       }}
     >
-      {/* Responsive signature grid */}
       <style>{`
         .signatures-grid {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-columns: 1fr;
           gap: 16px;
         }
 
@@ -94,12 +93,6 @@ export default function App() {
         @media (min-width: 1200px) {
           .signatures-grid {
             grid-template-columns: repeat(6, minmax(0, 1fr));
-          }
-        }
-
-        @media (max-width: 480px) {
-          .signatures-grid {
-            gap: 12px;
           }
         }
       `}</style>
@@ -132,6 +125,7 @@ export default function App() {
           maxWidth: 1200,
           margin: '48px auto 0',
           padding: '0 24px',
+          boxSizing: 'border-box',
         }}
       >
         <div
@@ -264,6 +258,7 @@ export default function App() {
           maxWidth: 1200,
           margin: '48px auto 0',
           padding: '0 24px',
+          boxSizing: 'border-box',
         }}
       >
         <div
@@ -464,6 +459,8 @@ function SignatureCard({
   return (
     <div
       style={{
+        minWidth: 0,
+        boxSizing: 'border-box',
         background:
           index % 3 === 0
             ? '#fef7d0'
@@ -476,8 +473,7 @@ function SignatureCard({
         transform: `rotate(${rotate}deg)`,
         transition: 'transform 0.2s',
         cursor: 'default',
-        minWidth: 0,
-        boxSizing: 'border-box',
+        overflowWrap: 'anywhere',
       }}
       onMouseEnter={e =>
         ((e.currentTarget as HTMLDivElement).style.transform =
